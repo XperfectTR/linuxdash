@@ -149,7 +149,7 @@ $('.open-widget').live('click',function(){
 
 function openWidget(widget, widgetIdentifier, speed){
 
-    // decrement closed-widget-count 
+    // decrement closed-widget-count
     if(widget.is(":hidden")) {
         closedWidgetCount.text( Number(closedWidgetCount.text()) - 1);
     }
@@ -158,9 +158,9 @@ function openWidget(widget, widgetIdentifier, speed){
     widget.show(500);
 
      // remove widget from localstorage
-    var localData = JSON.parse(window.localStorage.getItem('hidden'));
+    var localData = JSON.parse(window.localStorage.getItem('hidden')) || [];
     for(var i = localData.length; i--;){
-        if (localData[i] == widgetIdentifier) {
+        if (localData[i] === widgetIdentifier) {
             localData.splice(i, 1);
         }
     }
@@ -171,7 +171,7 @@ function openWidget(widget, widgetIdentifier, speed){
 function hideWidget(widget, speed){
     // cache DOM objects/data used in this function
     var widgetName = widget.find('.widget-header h3').text();
-    var widgetIdentifier = widget.attr('id'); 
+    var widgetIdentifier = widget.attr('id');
 
     // update count
     if(!widget.is(":hidden")) {
@@ -187,16 +187,12 @@ function hideWidget(widget, speed){
     // add widget to localstorage (and create item if needed)
     var localData = JSON.parse(window.localStorage.getItem('hidden'));
     if(localData == null) {
-        hidden = new Array();
-        hidden.push(widgetIdentifier);
-        localStorage.setItem('hidden', JSON.stringify(hidden));
+        localData = [widgetIdentifier];
     }
-    else{
-        if (!isInArray(localData, widgetIdentifier)) {
-            localData.push(widgetIdentifier);
-            localStorage.setItem('hidden', JSON.stringify(localData));
-        }
+    else if (!isInArray(localData, widgetIdentifier)) {
+        localData.push(widgetIdentifier);
     }
+    localStorage.setItem('hidden', JSON.stringify(localData));
 }
 
 function keepWidgetHidden(){
